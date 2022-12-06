@@ -51,8 +51,9 @@ namespace RobotCacheLibrary
 
             string appConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RobotCache", "RobotCacheClient", "config", "appConfig.json");
             RobotCacheModels appConfig = Serialization.FromJson<RobotCacheModels>(File.ReadAllText(appConfigPath));
-            foreach(string libraryPath in appConfig.libraries)
+            foreach(string libraryPathRaw in appConfig.libraries)
             {
+                string libraryPath = libraryPathRaw.Replace('/', '\\');
                 if(Directory.Exists(libraryPath))
                 {
                     string gamesPath = Path.Combine(libraryPath, "rcdata", "games");
