@@ -1,0 +1,7 @@
+﻿Id: RobotCacheLibrary_4de579c6-7179-4229-b776-7a3a9e902052
+Name: RobotCache library integration
+Author: John "Nielk1" Klein
+Version: 0.1
+Module: RobotCacheLibrary.dll
+Type: GameLibrary
+Icon: Resources\robotcacheicon.png

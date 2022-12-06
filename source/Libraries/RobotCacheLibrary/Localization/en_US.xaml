@@ -1,0 +1,10 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel">Import installed games</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel">Import not installed games</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount">Connect account</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoginChecking">Checking authentication status…</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoggedIn">User is authenticated</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn">Requires authentication</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError">Failed to authenticate user.</sys:String>
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel">Authenticate</sys:String>
+</ResourceDictionary>
