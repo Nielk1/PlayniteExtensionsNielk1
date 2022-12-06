@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel">Telepített játékok importálása</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel">Nem telepített játékok importálása</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount">Összekapcsolás a fiókkal</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoginChecking">Hitelesítés ellenőrzése…</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoggedIn">Felhasználó hitelesítve</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn">Felhasználói hitelesítés szükséges.</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError">Felhasználói hitelesítés sikertelen.</sys:String>
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel">Bejelentkezés</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly">Játékok indítása a hivatalos kliens futtatása nélkül</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink">Fiók szinkronizálási hibaelhárító</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues">Hibaelhárítás</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel">Minden játék importálása</sys:String>
+  <sys:String x:Key="LOCRobotCachePrivateAccount">Nem publikus fiók</sys:String>
+  <sys:String x:Key="LOCRobotCachePublicAccount">Publikus fiók</sys:String>
+  <sys:String x:Key="LOCRobotCacheAPIKey">API Kulcs</sys:String>
+  <sys:String x:Key="LOCRobotCacheStartUsingClient">{0} használata</sys:String>
+  <sys:String x:Key="LOCRobotCacheImportPlaytime">Játékidő importálása</sys:String>
+  <sys:String x:Key="LOCRobotCacheAccountID">Fióknév</sys:String>
+</ResourceDictionary>

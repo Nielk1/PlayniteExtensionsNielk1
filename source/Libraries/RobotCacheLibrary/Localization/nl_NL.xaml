@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel">Importeer geïnstalleerde spellen</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel">Importeer niet-geïnstalleerde spellen</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount">Accounts koppelen</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoginChecking">Verificatiestatus aan het controleren...</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoggedIn">De gebruiker is niet geverifieerd.</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn">Verificatie vereist</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError">Kan gebruiker te verifiëren</sys:String>
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel">Verifiëren</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly">Start games zonder de officiële client op te starten.</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink">Probleemoplossing account synchronisatie</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues">Probleemoplossing</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel">Importeer alle spellen</sys:String>
+  <sys:String x:Key="LOCRobotCachePrivateAccount">Privé-account</sys:String>
+  <sys:String x:Key="LOCRobotCachePublicAccount">Openbaar Account</sys:String>
+  <sys:String x:Key="LOCRobotCacheAPIKey">API Sleutel</sys:String>
+  <sys:String x:Key="LOCRobotCacheStartUsingClient">Starten met {0} client</sys:String>
+  <sys:String x:Key="LOCRobotCacheImportPlaytime">Importeer speeltijd</sys:String>
+  <sys:String x:Key="LOCRobotCacheAccountID">Account ID</sys:String>
+</ResourceDictionary>

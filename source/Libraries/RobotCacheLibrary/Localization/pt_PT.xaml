@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel" />
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel" />
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount" />
+  <sys:String x:Key="LOCRobotCacheLoginChecking" />
+  <sys:String x:Key="LOCRobotCacheLoggedIn" />
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn" />
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError" />
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel" />
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly" />
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink" />
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues" />
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel" />
+  <sys:String x:Key="LOCRobotCachePrivateAccount" />
+  <sys:String x:Key="LOCRobotCachePublicAccount" />
+  <sys:String x:Key="LOCRobotCacheAPIKey" />
+  <sys:String x:Key="LOCRobotCacheStartUsingClient" />
+  <sys:String x:Key="LOCRobotCacheImportPlaytime" />
+  <sys:String x:Key="LOCRobotCacheAccountID" />
+</ResourceDictionary>

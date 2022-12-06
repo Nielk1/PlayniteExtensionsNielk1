@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel">匯入已安裝的遊戲</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel">匯入未安裝遊戲</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount">連結帳號</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoginChecking">正在檢查驗證狀態...</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoggedIn">使用者已驗證</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn">需要驗證</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError">無法驗證用戶</sys:String>
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel">驗證</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly">不透過啟動器直接開始遊戲</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink">解決帳號同步問題</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues">疑難排解</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel">匯入所有遊戲</sys:String>
+  <sys:String x:Key="LOCRobotCachePrivateAccount">私密帳號</sys:String>
+  <sys:String x:Key="LOCRobotCachePublicAccount">公開帳號</sys:String>
+  <sys:String x:Key="LOCRobotCacheAPIKey">API 密鑰</sys:String>
+  <sys:String x:Key="LOCRobotCacheStartUsingClient">以{0}啟動</sys:String>
+  <sys:String x:Key="LOCRobotCacheImportPlaytime">匯入遊玩時間</sys:String>
+  <sys:String x:Key="LOCRobotCacheAccountID">帳戶ID</sys:String>
+</ResourceDictionary>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel">Importar juegos instalados</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel">Importar juegos no instalados</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount">Conectar cuenta</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoginChecking">Comprobando el estado de la autenticación…</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoggedIn">El usuario está autenticado</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn">Requiere autenticación</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError">Fallo al autenticar usuario.</sys:String>
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel">Autenticar</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly">Iniciar juegos directamente sin correr el cliente oficial</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink">Resolución de problemas de sincronización de cuentas</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues">Resolución de problemas</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel">Importar todos los juegos</sys:String>
+  <sys:String x:Key="LOCRobotCachePrivateAccount">Cuenta Privada</sys:String>
+  <sys:String x:Key="LOCRobotCachePublicAccount">Cuenta Pública</sys:String>
+  <sys:String x:Key="LOCRobotCacheAPIKey">Clave de API</sys:String>
+  <sys:String x:Key="LOCRobotCacheStartUsingClient">Iniciar usando el cliente {0}</sys:String>
+  <sys:String x:Key="LOCRobotCacheImportPlaytime">Importar tiempo de juego</sys:String>
+  <sys:String x:Key="LOCRobotCacheAccountID">ID de cuenta</sys:String>
+</ResourceDictionary>

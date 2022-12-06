@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel">Yüklü oyunları içeri aktar</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel">Yüklü olmayan oyunları içe aktar</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount">Hesap bağla</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoginChecking">Kimlik doğrulama durumu kontrol ediliyor…</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoggedIn">Kullanıcı kimliği doğrulandı</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn">Kimlik doğrulama gerektiriyor</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError">Kullanıcı kimliği doğrulanamadı.</sys:String>
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel">Kimlik Doğrulaması</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly">Oyunu resmi istemciyi çalıştırmadan doğrudan başlat</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink">Hesap eşitleme sorunlarını giderme</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues">Sorunları giderme</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel">Tüm oyunları içeri aktar</sys:String>
+  <sys:String x:Key="LOCRobotCachePrivateAccount">Özel Hesap</sys:String>
+  <sys:String x:Key="LOCRobotCachePublicAccount">Genel Hesap</sys:String>
+  <sys:String x:Key="LOCRobotCacheAPIKey">API Anahtarı</sys:String>
+  <sys:String x:Key="LOCRobotCacheStartUsingClient">{0} istemicisini kullanarak başlat</sys:String>
+  <sys:String x:Key="LOCRobotCacheImportPlaytime">Oynama zamanını içe aktar</sys:String>
+  <sys:String x:Key="LOCRobotCacheAccountID">Hesap ID</sys:String>
+</ResourceDictionary>

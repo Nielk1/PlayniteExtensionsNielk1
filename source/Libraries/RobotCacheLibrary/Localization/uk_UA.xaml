@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <sys:String x:Key="LOCRobotCacheSettingsImportInstalledLabel">Імпортувати встановлені ігри</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportUninstalledLabel">Імпортувати не встановлені ігри</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsConnectAccount">Під'єднати обліковий запис</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoginChecking">Перевірка стану автентифікації...</sys:String>
+  <sys:String x:Key="LOCRobotCacheLoggedIn">Користувача автентифіковано</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedIn">Необхідна автентифікація</sys:String>
+  <sys:String x:Key="LOCRobotCacheNotLoggedInError">Не вдалося автентифікувати користувача.</sys:String>
+  <sys:String x:Key="LOCRobotCacheAuthenticateLabel">Автентифікація</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly">Запускати гру напряму без запуску офіційного клієнту</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink">Вирішення проблем із синхронізацією облікового запису</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues">Вирішення проблем</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel">Імпортувати всі ігри</sys:String>
+  <sys:String x:Key="LOCRobotCachePrivateAccount">Приватний обліковий запис</sys:String>
+  <sys:String x:Key="LOCRobotCachePublicAccount">Загальнодоступний обліковий запис</sys:String>
+  <sys:String x:Key="LOCRobotCacheAPIKey">Ключ API</sys:String>
+  <sys:String x:Key="LOCRobotCacheStartUsingClient">Запустити клієнтом {0}</sys:String>
+  <sys:String x:Key="LOCRobotCacheImportPlaytime">Імпортувати час у грі</sys:String>
+  <sys:String x:Key="LOCRobotCacheAccountID">ID облікового запису</sys:String>
+</ResourceDictionary>
