@@ -21,7 +21,6 @@ namespace RobotCacheLibrary
     {
         private static readonly ILogger Logger = LogManager.GetLogger();
 
-        internal readonly string TokensPath;
 
         private RobotCacheLibrarySettingsViewModel Settings { get; set; }
 
@@ -32,7 +31,7 @@ namespace RobotCacheLibrary
         public override string Name => "RobotCache";
 
         // Implementing Client adds ability to open it via special menu in playnite.
-        public override LibraryClient Client { get; } = new RobotCacheLibraryClient();
+        //public override LibraryClient Client { get; } = new RobotCacheLibraryClient();
 
         public string ImportErrorMessageId { get; }
         public RobotCacheLibrary(IPlayniteAPI api) : base(api)
@@ -46,7 +45,7 @@ namespace RobotCacheLibrary
             ImportErrorMessageId = $"{Name}_libImportError";
         }
 
-        internal Dictionary<string, GameMetadata> GetInstalledGames()
+        public static Dictionary<string, GameMetadata> GetInstalledGames()
         {
             var games = new Dictionary<string, GameMetadata>();
 
@@ -82,7 +81,7 @@ namespace RobotCacheLibrary
                                 //    Path = $"robotcache://rungameid/{stateInfo.gameId}",
                                 //});
 
-                                //game.Name = game.Name.RemoveTrademarks();
+                                game.Name = game.Name.RemoveTrademarks();
                                 games.Add(game.GameId, game);
                             }
                         }
@@ -120,12 +119,44 @@ namespace RobotCacheLibrary
                         //    IsPlayAction = true,
                         //    Path = $"robotcache://rungameid/{gameData.gameId}",
                         //});
+
+                        game.Name = game.Name.RemoveTrademarks();
                         games.Add(game);
                     }
                 }
             }
 
             return games;
+        }
+
+        public override IEnumerable<InstallController> GetInstallActions(GetInstallActionsArgs args)
+        {
+            if (args.Game.PluginId != Id)
+            {
+                yield break;
+            }
+
+            yield return new RobotCacheInstallController(args.Game);
+        }
+
+        public override IEnumerable<UninstallController> GetUninstallActions(GetUninstallActionsArgs args)
+        {
+            if (args.Game.PluginId != Id)
+            {
+                yield break;
+            }
+
+            yield return new RobotCacheUninstallController(args.Game);
+        }
+
+        public override IEnumerable<PlayController> GetPlayActions(GetPlayActionsArgs args)
+        {
+            if (args.Game.PluginId != Id)
+            {
+                yield break;
+            }
+
+            yield return new RobotCachePlayController(args.Game);
         }
 
         //public string GetCachePath(string dirName)

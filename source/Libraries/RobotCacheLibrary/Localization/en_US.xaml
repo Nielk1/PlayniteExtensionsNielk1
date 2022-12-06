@@ -7,4 +7,15 @@
   <sys:String x:Key="LOCRobotCacheNotLoggedIn">Requires authentication</sys:String>
   <sys:String x:Key="LOCRobotCacheNotLoggedInError">Failed to authenticate user.</sys:String>
   <sys:String x:Key="LOCRobotCacheAuthenticateLabel">Authenticate</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsStartGameDirectly">Start games directly without running official client</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingAccountLink">Troubleshooting account sync issues</sys:String>
+  <sys:String x:Key="LOCRobotCacheTroubleShootingIssues">Troubleshooting issues</sys:String>
+  <sys:String x:Key="LOCRobotCacheSettingsImportLibraryLabel">Import all games</sys:String>
+  <sys:String x:Key="LOCRobotCachePrivateAccount">Private Account</sys:String>
+  <sys:String x:Key="LOCRobotCachePublicAccount">Public Account</sys:String>
+  <sys:String x:Key="LOCRobotCacheAPIKey">API Key</sys:String>
+  <sys:String x:Key="LOCRobotCacheStartUsingClient">Start using {0} client</sys:String>
+  <sys:String x:Key="LOCRobotCacheImportPlaytime">Import play time</sys:String>
+  <sys:String x:Key="LOCRobotCacheAccountID">Account ID</sys:String>
+  <sys:String x:Key="LOCRobotCacheMetadataLanguageLabel">Metadata language:</sys:String>
 </ResourceDictionary>
