@@ -109,18 +109,18 @@ namespace RobotCacheLibrary
                     var installed = RobotCacheLibrary.GetInstalledGames();
                     if (installed.ContainsKey(id))
                     {
-                        // if we have no record, it's clearly not installed anymore
-                        InvokeOnUninstalled(new GameUninstalledEventArgs());
-                        return;
-                    }
-                    else
-                    {
                         if (installed.TryGetValue(id, out var installedGame) && !installedGame.IsInstalled)
                         {
                             // we have a record, but it's not installed, or at least it appears to not be
                             InvokeOnUninstalled(new GameUninstalledEventArgs());
                             return;
                         }
+                    }
+                    else
+                    {
+                        // if we have no record, it's clearly not installed anymore
+                        InvokeOnUninstalled(new GameUninstalledEventArgs());
+                        return;
                     }
 
                     await Task.Delay(10000);
