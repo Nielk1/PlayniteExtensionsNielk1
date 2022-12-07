@@ -1,4 +1,5 @@
-﻿using Playnite.SDK;
+﻿using Playnite.Common;
+using Playnite.SDK;
 using Playnite.SDK.Data;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -12,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Controls;
 using System.Xml.Linq;
 
@@ -95,7 +97,7 @@ namespace RobotCacheLibrary
 
         internal List<GameMetadata> GetLibraryGames(CancellationToken cancelToken)
         {
-            //var cacheDir = GetCachePath("catalogcache");
+            var cacheDir = GetCachePath("stashcache");
             var games = new List<GameMetadata>();
             using (var view = PlayniteApi.WebViews.CreateOffscreenView())
             {
@@ -106,6 +108,16 @@ namespace RobotCacheLibrary
 
                     foreach (var gameData in foundGames)
                     {
+                        if (cancelToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        var cacheFile = Paths.GetSafePathName($"{gameData.gameId}_short.json");
+                        cacheFile = Path.Combine(cacheDir, cacheFile);
+                        string stashJson = Serialization.ToJson(gameData, false);
+                        FileSystem.WriteStringToFile(cacheFile, stashJson);
+
                         var game = new GameMetadata()
                         {
                             Source = new MetadataNameProperty("RobotCache"),
@@ -128,6 +140,147 @@ namespace RobotCacheLibrary
             }
 
             return games;
+        }
+
+        public GameMetadata GetFullGameMetadata(Game game)
+        {
+            var cacheDir = GetCachePath("stashcache");
+
+            var cacheFile = Paths.GetSafePathName($"{game.GameId}_full.json");
+            cacheFile = Path.Combine(cacheDir, cacheFile);
+            
+            //using (var view = PlayniteApi.WebViews.CreateOffscreenView())
+            {
+                //var accountApi = new RobotCacheAccountClient(view);
+                //if (accountApi.GetIsUserLoggedIn())
+                {
+                    bool DoDownload = true;
+                    if (FileSystem.FileExists(cacheFile))
+                    {
+                        DoDownload = FileSystem.FileGetLastWriteTime(cacheFile).AddDays(1) < DateTime.UtcNow;
+                    }
+
+                    RobotCacheStash_FullItem gameData = null;
+
+                    if (!DoDownload)
+                    {
+                        if (FileSystem.FileExists(cacheFile))
+                        {
+                            string rawJson = FileSystem.ReadStringFromFile(cacheFile);
+                            try
+                            {
+                                gameData = Serialization.FromJson<RobotCacheStash_FullItem>(rawJson);
+                            }
+                            catch
+                            {
+                                DoDownload = true;
+                            }
+                        }
+                        else
+                        {
+                            DoDownload = true;
+                        }
+                    }
+
+                    if (DoDownload)
+                    {
+                        //var gameDataWrap = accountApi.GetFullGameMetadata(game.GameId);
+                        var gameDataWrap = RobotCacheAccountClient.GetFullGameMetadata(game.GameId);
+                        FileSystem.WriteStringToFile(cacheFile, gameDataWrap.Item2);
+                        gameData = gameDataWrap.Item1;
+                    }
+
+                    if(gameData != null)
+                    {
+                        var metadata = new GameMetadata()
+                        {
+                            //Source = new MetadataNameProperty("RobotCache"),
+                            //GameId = game.GameId,
+                        };
+
+                        string imageCover = gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.mainQuad).FirstOrDefault()?.url ?? gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.mainSmall).FirstOrDefault()?.url;
+                        //string imageLogo = gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.gameLogoLarge).FirstOrDefault()?.url ?? gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.gameLogoSmall).FirstOrDefault()?.url;
+                        string imageBackground = gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.background).FirstOrDefault()?.url;
+                        if (!string.IsNullOrWhiteSpace(imageCover))
+                        {
+                            //if (imageCover.EndsWith(".webp"))
+                            //    imageCover = imageCover.Substring(0, imageCover.Length - 5) + ".png";
+                            metadata.CoverImage = new MetadataFile(@"https://cdn.robotcache.com/" + imageCover);
+                        }
+                        if (!string.IsNullOrWhiteSpace(imageBackground))
+                        {
+                            //if (imageBackground.EndsWith(".webp"))
+                            //    imageBackground = imageBackground.Substring(0, imageBackground.Length - 5) + ".png";
+                            metadata.BackgroundImage = new MetadataFile(@"https://cdn.robotcache.com/" + imageBackground);
+                        }
+
+
+                        //var links = gameData.itemLinks.Where(dr => !string.IsNullOrWhiteSpace(dr.url) && !string.IsNullOrWhiteSpace(dr.title)).Select(dr => new Link(dr.title ?? dr.url, dr.url)).ToList();
+
+                        //gameData.forumUrl // possible forum link, seems to often be to FAQs and stuff
+
+                        var publisherLink = gameData.itemLinks.Where(dr => dr.itemLinkType == (int)RobotCacheLinkType.Publisher).FirstOrDefault();
+                        var developerLink = gameData.itemLinks.Where(dr => dr.itemLinkType == (int)RobotCacheLinkType.Developer).FirstOrDefault();
+
+                        var links = new List<Link>();
+                        links.Add(new Link(ResourceProvider.GetString("LOCCommonLinksStorePage"), $@"https://store.robotcache.com/#!/game/{gameData.id}/{gameData.urn}"));
+                        if (publisherLink != null && !string.IsNullOrWhiteSpace(publisherLink.title))
+                        {
+                            if (metadata.Publishers == null)
+                            {
+                                metadata.Publishers = new HashSet<MetadataProperty>();
+                            }
+                            metadata.Publishers.Add(new MetadataNameProperty(publisherLink.title));
+                            /*if (!string.IsNullOrWhiteSpace(publisherLink.url))
+                            {
+                                links.Add(new Link(publisherLink.title, publisherLink.url));
+                            }*/
+                        }
+                        if (developerLink != null && !string.IsNullOrWhiteSpace(developerLink.title))
+                        {
+                            if (metadata.Developers == null)
+                            {
+                                metadata.Developers = new HashSet<MetadataProperty>();
+                            }
+                            metadata.Developers.Add(new MetadataNameProperty(developerLink.title));
+                            /*if (!string.IsNullOrWhiteSpace(developerLink.url))
+                            {
+                                links.Add(new Link(developerLink.title, developerLink.url));
+                            }*/
+                        }
+                        metadata.Links = links;
+
+
+
+                        if (!string.IsNullOrWhiteSpace(gameData.description))
+                        {
+                            metadata.Description = gameData.description;
+                        }
+                        else if(!string.IsNullOrWhiteSpace(gameData.shortDescription))
+                        {
+                            metadata.Description = gameData.shortDescription;
+                        }
+                        
+                        return metadata;
+                    }
+                    return null;
+                }
+            }
+
+            //string stashJson = Serialization.ToJson(gameData, false);
+            //FileSystem.WriteStringToFile(cacheFile, stashJson);
+
+            return null;
+        }
+
+        public string GetCachePath(string dirName)
+        {
+            return Path.Combine(GetPluginUserDataPath(), dirName);
+        }
+
+        public override LibraryMetadataProvider GetMetadataDownloader()
+        {
+            return new RobotCacheMetadataProvider(this);
         }
 
         public override IEnumerable<InstallController> GetInstallActions(GetInstallActionsArgs args)

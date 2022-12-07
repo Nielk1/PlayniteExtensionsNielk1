@@ -1,8 +1,14 @@
 ﻿using Playnite.SDK;
 using Playnite.SDK.Data;
+using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Text;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
 namespace RobotCacheLibrary.Services
 {
@@ -10,6 +16,7 @@ namespace RobotCacheLibrary.Services
     {
         private static ILogger logger = LogManager.GetLogger();
         private readonly IWebView webView;
+        private const string gameApiUrl = @"https://store.robotcache.com/api/game/{0}";
         private const string stashApiUrl = @"https://store.robotcache.com/api/user/stash";
         private const string stashNavUrl = @"https://store.robotcache.com/user/stash";
         private const string stashUrl = @"https://store.robotcache.com/user/stash#!/";
@@ -111,6 +118,31 @@ namespace RobotCacheLibrary.Services
             }
 
             return cacheItemMap.Values.ToList();
+        }
+
+        public static Tuple<RobotCacheStash_FullItem, string> GetFullGameMetadata(string gameId)
+        {
+            try
+            {
+                //webView.NavigateAndWait(string.Format(gameApiUrl, gameId));
+                //string rawText = webView.GetPageText();
+                using (WebClient client = new WebClient())
+                {
+                    client.Headers["cache-control"] = "no-cache";
+                    client.Headers["accept-language"] = "en-US,en;q=0.9";
+                    byte[] rawData = client.DownloadData(string.Format(gameApiUrl, gameId));
+                    string rawText = Encoding.UTF8.GetString(rawData);
+
+                    RobotCacheStash_FullItem gameData = Serialization.FromJson<RobotCacheStash_FullItem>(rawText);
+
+                    return new Tuple<RobotCacheStash_FullItem, string>(gameData, rawText);
+                }
+            }
+            catch (Exception e) when (!Debugger.IsAttached)
+            {
+                logger.Error(e, "Failed to get full game metadata.");
+            }
+            return null;
         }
     }
 }
