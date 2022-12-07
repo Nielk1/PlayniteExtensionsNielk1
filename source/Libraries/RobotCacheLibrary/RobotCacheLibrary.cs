@@ -6,6 +6,7 @@ using Playnite.SDK.Plugins;
 using RobotCacheLibrary.Services;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -142,6 +143,46 @@ namespace RobotCacheLibrary
             return games;
         }
 
+        private T GetCachedData<T>(string cacheFile, string url) where T : class
+        {
+            bool DoDownload = true;
+            if (FileSystem.FileExists(cacheFile))
+            {
+                DoDownload = FileSystem.FileGetLastWriteTime(cacheFile).AddDays(1) < DateTime.UtcNow;
+            }
+
+            T gameData = default(T);
+
+            if (!DoDownload)
+            {
+                if (FileSystem.FileExists(cacheFile))
+                {
+                    string rawJson = FileSystem.ReadStringFromFile(cacheFile);
+                    try
+                    {
+                        gameData = Serialization.FromJson<T>(rawJson);
+                    }
+                    catch
+                    {
+                        DoDownload = true;
+                    }
+                }
+                else
+                {
+                    DoDownload = true;
+                }
+            }
+
+            if (DoDownload)
+            {
+                var gameDataWrap = RobotCacheAccountClient.DownloadMetadata<T>(url);
+                FileSystem.WriteStringToFile(cacheFile, gameDataWrap.Item2);
+                gameData = gameDataWrap.Item1;
+            }
+
+            return gameData;
+        }
+
         public GameMetadata GetFullGameMetadata(Game game)
         {
             var cacheDir = GetCachePath("stashcache");
@@ -154,43 +195,13 @@ namespace RobotCacheLibrary
                 //var accountApi = new RobotCacheAccountClient(view);
                 //if (accountApi.GetIsUserLoggedIn())
                 {
-                    bool DoDownload = true;
-                    if (FileSystem.FileExists(cacheFile))
-                    {
-                        DoDownload = FileSystem.FileGetLastWriteTime(cacheFile).AddDays(1) < DateTime.UtcNow;
-                    }
 
-                    RobotCacheStash_FullItem gameData = null;
+                    // TODO consider loading this less often, the cache prevents multi-downloads but we're going to thrash reading the disk here without a memo
+                    Dictionary<string, string> localizeData = GetCachedData<Dictionary<string, string>>(cacheFile, RobotCacheAccountClient.GetLocalizeUrl());
+                    RobotCacheStash_FullTag[] tagData = GetCachedData<RobotCacheStash_FullTag[]>(cacheFile, RobotCacheAccountClient.GetTagDataUrl());
 
-                    if (!DoDownload)
-                    {
-                        if (FileSystem.FileExists(cacheFile))
-                        {
-                            string rawJson = FileSystem.ReadStringFromFile(cacheFile);
-                            try
-                            {
-                                gameData = Serialization.FromJson<RobotCacheStash_FullItem>(rawJson);
-                            }
-                            catch
-                            {
-                                DoDownload = true;
-                            }
-                        }
-                        else
-                        {
-                            DoDownload = true;
-                        }
-                    }
-
-                    if (DoDownload)
-                    {
-                        //var gameDataWrap = accountApi.GetFullGameMetadata(game.GameId);
-                        var gameDataWrap = RobotCacheAccountClient.GetFullGameMetadata(game.GameId);
-                        FileSystem.WriteStringToFile(cacheFile, gameDataWrap.Item2);
-                        gameData = gameDataWrap.Item1;
-                    }
-
-                    if(gameData != null)
+                    RobotCacheStash_FullItem gameData = GetCachedData<RobotCacheStash_FullItem>(cacheFile, RobotCacheAccountClient.GetGameMetadataUrl(game.GameId));
+                    if (gameData != null)
                     {
                         var metadata = new GameMetadata()
                         {
@@ -201,19 +212,19 @@ namespace RobotCacheLibrary
                         string imageCover = gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.mainQuad).FirstOrDefault()?.url ?? gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.mainSmall).FirstOrDefault()?.url;
                         //string imageLogo = gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.gameLogoLarge).FirstOrDefault()?.url ?? gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.gameLogoSmall).FirstOrDefault()?.url;
                         string imageBackground = gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.background).FirstOrDefault()?.url;
+                        string imageIcon = gameData.assets.Where(dr => dr.type == (int)RobotCacheAssetType.icon).FirstOrDefault()?.url;
                         if (!string.IsNullOrWhiteSpace(imageCover))
                         {
-                            //if (imageCover.EndsWith(".webp"))
-                            //    imageCover = imageCover.Substring(0, imageCover.Length - 5) + ".png";
                             metadata.CoverImage = new MetadataFile(@"https://cdn.robotcache.com/" + imageCover);
                         }
                         if (!string.IsNullOrWhiteSpace(imageBackground))
                         {
-                            //if (imageBackground.EndsWith(".webp"))
-                            //    imageBackground = imageBackground.Substring(0, imageBackground.Length - 5) + ".png";
                             metadata.BackgroundImage = new MetadataFile(@"https://cdn.robotcache.com/" + imageBackground);
                         }
-
+                        if (!string.IsNullOrWhiteSpace(imageIcon))
+                        {
+                            metadata.Icon = new MetadataFile(@"https://cdn.robotcache.com/" + imageIcon);
+                        }
 
                         //var links = gameData.itemLinks.Where(dr => !string.IsNullOrWhiteSpace(dr.url) && !string.IsNullOrWhiteSpace(dr.title)).Select(dr => new Link(dr.title ?? dr.url, dr.url)).ToList();
 
@@ -250,27 +261,137 @@ namespace RobotCacheLibrary
                         }
                         metadata.Links = links;
 
-
-
                         if (!string.IsNullOrWhiteSpace(gameData.description))
                         {
                             metadata.Description = gameData.description;
                         }
-                        else if(!string.IsNullOrWhiteSpace(gameData.shortDescription))
+                        else if (!string.IsNullOrWhiteSpace(gameData.shortDescription))
                         {
                             metadata.Description = gameData.shortDescription;
                         }
-                        
+
+                        if (gameData.size > 0)
+                        {
+                            metadata.InstallSize = gameData.size * 1024;
+                        }
+
+                        if (gameData.releaseDate != null)
+                        {
+                            metadata.ReleaseDate = new ReleaseDate(gameData.releaseDate);
+                        }
+
+                        metadata.Genres = new HashSet<MetadataProperty>();
+                        metadata.Features = new HashSet<MetadataProperty>();
+                        if (gameData.mainGenre != null && !string.IsNullOrWhiteSpace(gameData.mainGenre?.name))
+                        {
+                            string name = gameData.mainGenre.name;
+                            if(string.IsNullOrWhiteSpace(name))
+                            {
+                                var TagItem = tagData.Where(dr => dr.id == gameData.mainGenre.id).FirstOrDefault();
+                                if (TagItem != null)
+                                {
+                                    name = TagItem.name;
+                                }
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(name))
+                            {
+                                if (localizeData.ContainsKey(name))
+                                {
+                                    name = localizeData[name];
+                                }
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(name))
+                            {
+                                metadata.Genres.Add(new MetadataNameProperty(name));
+                            }
+                        }
+                        bool VR = false;
+                        bool KBM = false;
+                        bool Gamepad = false;
+                        foreach (var tag in gameData.tags)
+                        {
+                            if(tag != null)
+                            {
+                                var tagDatum = tagData.Where(dr => dr.id == tag.id).FirstOrDefault();
+                                if (tagDatum != null)
+                                {
+                                    string name = tagDatum.name;
+
+                                    if (!string.IsNullOrWhiteSpace(name))
+                                    {
+                                        if (localizeData.ContainsKey(name))
+                                        {
+                                            name = localizeData[name];
+                                        }
+                                    }
+
+                                    if (!string.IsNullOrWhiteSpace(name))
+                                    {
+                                        switch((RobotCacheTagType)tagDatum.type)
+                                        {
+                                            case RobotCacheTagType.Genre:
+                                                metadata.Genres.Add(new MetadataNameProperty(name));
+                                                break;
+                                            case RobotCacheTagType.VRMode:
+                                                switch ((RobotCacheTags)tagDatum.id)
+                                                {
+                                                    case RobotCacheTags.VRMode_Seated:
+                                                        metadata.Features.Add(new MetadataNameProperty("VR Seated"));
+                                                        break;
+                                                    case RobotCacheTags.VRMode_Standing:
+                                                        metadata.Features.Add(new MetadataNameProperty("VR Standing"));
+                                                        break;
+                                                    case RobotCacheTags.VRMode_RoomScale:
+                                                        metadata.Features.Add(new MetadataNameProperty("VR Room-Scale"));
+                                                        break;
+                                                }
+                                                break;
+                                            case RobotCacheTagType.ControlFeature:
+                                                switch ((RobotCacheTags)tagDatum.id)
+                                                {
+                                                    case RobotCacheTags.ControlFeature_KeyboardMouse:
+                                                        KBM = true;
+                                                        break;
+                                                    case RobotCacheTags.ControlFeature_Gamepad:
+                                                        Gamepad = true;
+                                                        break;
+                                                    case RobotCacheTags.ControlFeature_TrackedMotionControllers:
+                                                        metadata.Features.Add(new MetadataNameProperty("VR Motion Controllers"));
+                                                        break;
+                                                    case RobotCacheTags.ControlFeature_VRSupported:
+                                                    case RobotCacheTags.ControlFeature_WindowsMixedReality: // does this imply Motion Controllers?
+                                                    case RobotCacheTags.ControlFeature_HTCVive: // does this imply Motion Controllers?
+                                                    case RobotCacheTags.ControlFeature_OculusRift: // does this imply Motion Controllers?
+                                                        VR = true;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(VR)
+                        {
+                            metadata.Features.Add(new MetadataNameProperty("VR"));
+                            if(KBM)
+                            {
+                                metadata.Features.Add(new MetadataNameProperty("VR Keyboard / Mouse"));
+                            }
+                            if (Gamepad)
+                            {
+                                metadata.Features.Add(new MetadataNameProperty("VR Gamepad"));
+                            }
+                        }
+
                         return metadata;
                     }
                     return null;
                 }
             }
-
-            //string stashJson = Serialization.ToJson(gameData, false);
-            //FileSystem.WriteStringToFile(cacheFile, stashJson);
-
-            return null;
+            //return null;
         }
 
         public string GetCachePath(string dirName)

@@ -1,5 +1,6 @@
 ﻿using Playnite.SDK;
 using Playnite.SDK.Data;
+using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
@@ -120,7 +122,7 @@ namespace RobotCacheLibrary.Services
             return cacheItemMap.Values.ToList();
         }
 
-        public static Tuple<RobotCacheStash_FullItem, string> GetFullGameMetadata(string gameId)
+        public static Tuple<T, string> DownloadMetadata<T>(string url) where T : class
         {
             try
             {
@@ -130,19 +132,46 @@ namespace RobotCacheLibrary.Services
                 {
                     client.Headers["cache-control"] = "no-cache";
                     client.Headers["accept-language"] = "en-US,en;q=0.9";
-                    byte[] rawData = client.DownloadData(string.Format(gameApiUrl, gameId));
-                    string rawText = Encoding.UTF8.GetString(rawData);
+                    byte[] rawData = null;
+                    try
+                    {
+                        rawData = client.DownloadData(url);
+                    }
+                    catch (WebException we) when (we.Response != null && ((HttpWebResponse)we.Response).StatusCode == HttpStatusCode.NotFound)
+                    {
+                        Task.Delay(5000).ConfigureAwait(false).GetAwaiter().GetResult();
+                        rawData = client.DownloadData(url);
+                    }
+                    if (rawData != null)
+                    {
+                        string rawText = Encoding.UTF8.GetString(rawData);
 
-                    RobotCacheStash_FullItem gameData = Serialization.FromJson<RobotCacheStash_FullItem>(rawText);
+                        T gameData = Serialization.FromJson<T>(rawText);
 
-                    return new Tuple<RobotCacheStash_FullItem, string>(gameData, rawText);
+                        return new Tuple<T, string>(gameData, rawText);
+                    }
                 }
             }
             catch (Exception e) when (!Debugger.IsAttached)
             {
-                logger.Error(e, "Failed to get full game metadata.");
+                logger.Error(e, $"Failed to get metadata {typeof(T)} from \"{url}\".");
             }
             return null;
+        }
+
+        internal static string GetGameMetadataUrl(string gameId)
+        {
+            return string.Format(gameApiUrl, gameId);
+        }
+
+        internal static string GetLocalizeUrl()
+        {
+            return "https://store.robotcache.com/i18n/en.json";
+        }
+
+        internal static string GetTagDataUrl()
+        {
+            return "https://store.robotcache.com/api/tags";
         }
     }
 }
