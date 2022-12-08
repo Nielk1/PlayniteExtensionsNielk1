@@ -34,7 +34,8 @@ namespace RobotCacheLibrary
         public override string Name => "RobotCache";
 
         // Implementing Client adds ability to open it via special menu in playnite.
-        //public override LibraryClient Client { get; } = new RobotCacheLibraryClient();
+        public override LibraryClient Client { get; } = new RobotCacheClient();
+
 
         public string ImportErrorMessageId { get; }
         public RobotCacheLibrary(IPlayniteAPI api) : base(api)
@@ -42,7 +43,8 @@ namespace RobotCacheLibrary
             Settings = new RobotCacheLibrarySettingsViewModel(this);
             Properties = new LibraryPluginProperties
             {
-                HasSettings = true
+                HasSettings = true,
+                CanShutdownClient = true,
             };
             LibraryIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources", @"robotcacheicon.png");
             ImportErrorMessageId = $"{Name}_libImportError";

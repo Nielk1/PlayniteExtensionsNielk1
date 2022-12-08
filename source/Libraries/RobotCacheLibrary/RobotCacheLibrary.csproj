@@ -148,7 +148,7 @@
     </Compile>
     <Compile Include="LocalizationKeys.cs" />
     <Compile Include="RobotCacheGameController.cs" />
-    <Compile Include="RobotCacheLibraryClient.cs" />
+    <Compile Include="RobotCacheClient.cs" />
     <Compile Include="RobotCacheMetadataProvider.cs" />
     <Compile Include="RobotCacheModels.cs" />
     <Compile Include="RobotCacheLibrary.cs" />

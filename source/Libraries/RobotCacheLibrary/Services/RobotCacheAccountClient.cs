@@ -18,6 +18,8 @@ namespace RobotCacheLibrary.Services
     {
         private static ILogger logger = LogManager.GetLogger();
         private readonly IWebView webView;
+        private const string localizeEnApiUrl = @"https://store.robotcache.com/i18n/en.json";
+        private const string tagsApiUrl = @"https://store.robotcache.com/api/tags";
         private const string gameApiUrl = @"https://store.robotcache.com/api/game/{0}";
         private const string stashApiUrl = @"https://store.robotcache.com/api/user/stash";
         private const string stashNavUrl = @"https://store.robotcache.com/user/stash";
@@ -60,7 +62,7 @@ namespace RobotCacheLibrary.Services
                 return false;
             }
 
-            // in theory this call should always succeed if logged in, if it ever gives data but says isSuccessful is false the probably changed the system, so trust isSuccessful
+            // in theory this call should always succeed if logged in, if it ever gives data but says isSuccessful is false they probably changed the system, so trust isSuccessful
             try
             {
                 RobotCacheStateInfo_MiningRewards rewards = Serialization.FromJson<RobotCacheStateInfo_MiningRewards>(rawText);
@@ -101,8 +103,7 @@ namespace RobotCacheLibrary.Services
             {
                 try
                 {
-                    // Note: The casing of the JSON above was cammel-case, but here it's full-case, so a change to the serializer could break this on some of the child objects
-                    // The schema is differnt because there are some minor key differences, hence the need to convert the object
+                    // Note: The casing of the JSON above was cammel-case, but here it's full-case, so we get around any possible deserializer issues by making seperate schema with a conversion function
                     RobotCacheStash_ItemJS[] stashWebItems = Serialization.FromJson<RobotCacheStash_ItemJS[]>(stashExtractedJson[1].Trim().TrimEnd(';'));
 
                     foreach (var stashWebItem in stashWebItems)
@@ -166,12 +167,12 @@ namespace RobotCacheLibrary.Services
 
         internal static string GetLocalizeUrl()
         {
-            return "https://store.robotcache.com/i18n/en.json";
+            return localizeEnApiUrl;
         }
 
         internal static string GetTagDataUrl()
         {
-            return "https://store.robotcache.com/api/tags";
+            return tagsApiUrl;
         }
     }
 }
