@@ -20,10 +20,6 @@ namespace RobotCacheLibrary
             this.library = library;
         }
 
-        //public override void Dispose()
-        //{
-        //}
-
         public override GameMetadata GetMetadata(Game game)
         {
             return library.GetFullGameMetadata(game);

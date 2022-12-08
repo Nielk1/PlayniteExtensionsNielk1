@@ -236,7 +236,7 @@ namespace RobotCacheLibrary
                         var developerLink = gameData.itemLinks.Where(dr => dr.itemLinkType == (int)RobotCacheLinkType.Developer).FirstOrDefault();
 
                         var links = new List<Link>();
-                        links.Add(new Link(ResourceProvider.GetString("LOCCommonLinksStorePage"), $@"https://store.robotcache.com/#!/game/{gameData.id}/{gameData.urn}"));
+                        links.Add(new Link("RobotCache", $@"https://store.robotcache.com/#!/game/{gameData.id}/{gameData.urn}"));
                         if (publisherLink != null && !string.IsNullOrWhiteSpace(publisherLink.title))
                         {
                             if (metadata.Publishers == null)
