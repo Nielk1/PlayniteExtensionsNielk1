@@ -25,6 +25,7 @@ namespace RobotCacheLibrary.Services
         private const string stashNavUrl = @"https://store.robotcache.com/user/stash";
         private const string stashUrl = @"https://store.robotcache.com/user/stash#!/";
         private const string crudeLoginCheckUrl = @"https://store.robotcache.com/api/gamification/miningRewards/past/";
+        private const string userAgent = @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
         
         public RobotCacheAccountClient(IWebView webView)
         {
@@ -133,6 +134,7 @@ namespace RobotCacheLibrary.Services
                 {
                     client.Headers["cache-control"] = "no-cache";
                     client.Headers["accept-language"] = "en-US,en;q=0.9";
+                    client.Headers["user-agent"] = userAgent;
                     byte[] rawData = null;
                     try
                     {
