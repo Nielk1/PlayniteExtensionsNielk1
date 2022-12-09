@@ -128,8 +128,6 @@ namespace RobotCacheLibrary.Services
         {
             try
             {
-                //webView.NavigateAndWait(string.Format(gameApiUrl, gameId));
-                //string rawText = webView.GetPageText();
                 using (WebClient client = new WebClient())
                 {
                     client.Headers["cache-control"] = "no-cache";
