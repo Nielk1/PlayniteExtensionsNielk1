@@ -44,7 +44,7 @@ namespace RobotCacheLibrary
             Properties = new LibraryPluginProperties
             {
                 HasSettings = true,
-                CanShutdownClient = true,
+                //CanShutdownClient = true, // unsure of reliability due to not being a dedicated command, when in tray it might fail
             };
             LibraryIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources", @"robotcacheicon.png");
             ImportErrorMessageId = $"{Name}_libImportError";
