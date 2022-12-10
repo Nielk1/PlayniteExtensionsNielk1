@@ -25,8 +25,6 @@ namespace RobotCacheLibrary.Services
         private const string stashNavUrl = @"https://store.robotcache.com/user/stash";
         private const string stashUrl = @"https://store.robotcache.com/user/stash#!/";
         private const string crudeLoginCheckUrl = @"https://store.robotcache.com/api/gamification/miningRewards/past/";
-        private const string userAgent = @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
-        
         public RobotCacheAccountClient(IWebView webView)
         {
             this.webView = webView;
@@ -124,7 +122,7 @@ namespace RobotCacheLibrary.Services
             return cacheItemMap.Values.ToList();
         }
 
-        public static Tuple<T, string> DownloadMetadata<T>(string url) where T : class
+        public Tuple<T, string> DownloadMetadata<T>(string url) where T : class
         {
             try
             {
@@ -132,17 +130,10 @@ namespace RobotCacheLibrary.Services
                 {
                     client.Headers["cache-control"] = "no-cache";
                     client.Headers["accept-language"] = "en-US,en;q=0.9";
-                    client.Headers["user-agent"] = userAgent;
+                    var cookieString = string.Join(";", webView.GetCookies()?.Select(a => $"{a.Name}={a.Value}"));
+                    client.Headers.Add(HttpRequestHeader.Cookie, cookieString);
                     byte[] rawData = null;
-                    try
-                    {
-                        rawData = client.DownloadData(url);
-                    }
-                    catch (WebException we) when (we.Response != null && ((HttpWebResponse)we.Response).StatusCode == HttpStatusCode.NotFound)
-                    {
-                        Task.Delay(5000).ConfigureAwait(false).GetAwaiter().GetResult();
-                        rawData = client.DownloadData(url);
-                    }
+                    rawData = client.DownloadData(url);
                     if (rawData != null)
                     {
                         string rawText = Encoding.UTF8.GetString(rawData);

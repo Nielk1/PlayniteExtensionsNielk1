@@ -177,7 +177,8 @@ namespace RobotCacheLibrary
 
             if (DoDownload)
             {
-                var gameDataWrap = RobotCacheAccountClient.DownloadMetadata<T>(url);
+                // we need to use the offscreen view to harvest cookies to stop the non-cookied 404s (anti-scrape?).
+                var gameDataWrap = new RobotCacheAccountClient(PlayniteApi.WebViews.CreateOffscreenView()).DownloadMetadata<T>(url);
                 FileSystem.WriteStringToFile(cacheFile, gameDataWrap.Item2);
                 gameData = gameDataWrap.Item1;
             }
