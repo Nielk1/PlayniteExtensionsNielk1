@@ -178,7 +178,9 @@ namespace RobotCacheLibrary
             if (DoDownload)
             {
                 // we need to use the offscreen view to harvest cookies to stop the non-cookied 404s (anti-scrape?).
-                var gameDataWrap = new RobotCacheAccountClient(PlayniteApi.WebViews.CreateOffscreenView()).DownloadMetadata<T>(url);
+                RobotCacheAccountClient accountClient = new RobotCacheAccountClient(PlayniteApi.WebViews.CreateOffscreenView());
+                accountClient.GetIsUserLoggedIn(); // this ensures that site cookies exist even if we're not logged in, more specifically the AWS cookies
+                var gameDataWrap = accountClient.DownloadMetadata<T>(url);
                 FileSystem.WriteStringToFile(cacheFile, gameDataWrap.Item2);
                 gameData = gameDataWrap.Item1;
             }
