@@ -196,8 +196,8 @@ namespace RobotCacheLibrary
             cacheFile = Path.Combine(cacheDir, cacheFile);
             
             // TODO consider loading this less often, the cache prevents multi-downloads but we're going to thrash reading the disk here without a memo
-            Dictionary<string, string> localizeData = GetCachedData<Dictionary<string, string>>(cacheFile, RobotCacheAccountClient.GetLocalizeUrl());
-            RobotCacheStash_FullTag[] tagData = GetCachedData<RobotCacheStash_FullTag[]>(cacheFile, RobotCacheAccountClient.GetTagDataUrl());
+            Dictionary<string, string> localizeData = GetCachedData<Dictionary<string, string>>(GetCachePath("en.json"), RobotCacheAccountClient.GetLocalizeUrl());
+            RobotCacheStash_FullTag[] tagData = GetCachedData<RobotCacheStash_FullTag[]>(GetCachePath("tags.json"), RobotCacheAccountClient.GetTagDataUrl());
 
             RobotCacheStash_FullItem gameData = GetCachedData<RobotCacheStash_FullItem>(cacheFile, RobotCacheAccountClient.GetGameMetadataUrl(game.GameId));
             if (gameData != null)
