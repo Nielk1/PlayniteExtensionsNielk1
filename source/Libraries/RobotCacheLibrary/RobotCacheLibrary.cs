@@ -55,6 +55,8 @@ namespace RobotCacheLibrary
             var games = new Dictionary<string, GameMetadata>();
 
             string appConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RobotCache", "RobotCacheClient", "config", "appConfig.json");
+            if (!File.Exists(appConfigPath))
+                return games;
             RobotCacheModels appConfig = Serialization.FromJson<RobotCacheModels>(File.ReadAllText(appConfigPath));
             foreach(string libraryPathRaw in appConfig.libraries)
             {
@@ -62,33 +64,36 @@ namespace RobotCacheLibrary
                 if(Directory.Exists(libraryPath))
                 {
                     string gamesPath = Path.Combine(libraryPath, "rcdata", "games");
-                    foreach(string gamePath in Directory.EnumerateDirectories(gamesPath))
+                    if(Directory.Exists(gamesPath))
                     {
-                        string stateInfoPath = Path.Combine(gamePath, "stateInfo.json");
-                        if (File.Exists(stateInfoPath))
+                        foreach (string gamePath in Directory.EnumerateDirectories(gamesPath))
                         {
-                            RobotCacheStateInfo stateInfo = Serialization.FromJson<RobotCacheStateInfo>(File.ReadAllText(stateInfoPath));
-                            if (stateInfo.State.currentState == 6)
+                            string stateInfoPath = Path.Combine(gamePath, "stateInfo.json");
+                            if (File.Exists(stateInfoPath))
                             {
-                                string gameFolder = stateInfo.Execution.Where(dr => !string.IsNullOrWhiteSpace(dr.path)).FirstOrDefault()?.path;
-                                var game = new GameMetadata()
+                                RobotCacheStateInfo stateInfo = Serialization.FromJson<RobotCacheStateInfo>(File.ReadAllText(stateInfoPath));
+                                if (stateInfo.State.currentState == 6)
                                 {
-                                    Source = new MetadataNameProperty("RobotCache"),
-                                    GameId = stateInfo.gameId.ToString(),
-                                    Name = stateInfo.Execution.Where(dr => !string.IsNullOrWhiteSpace(dr.title)).FirstOrDefault()?.title,
-                                    InstallDirectory = Path.Combine(libraryPath, "library", gameFolder?.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, 2, StringSplitOptions.RemoveEmptyEntries)?.First()),
-                                    IsInstalled = true,
-                                    Platforms = new HashSet<MetadataProperty> { new MetadataSpecProperty("pc_windows") },
-                                    //GameActions = new List<GameAction>(),
-                                };
-                                //game.GameActions.Add(new GameAction()
-                                //{
-                                //    IsPlayAction = true,
-                                //    Path = $"robotcache://rungameid/{stateInfo.gameId}",
-                                //});
+                                    string gameFolder = stateInfo.Execution.Where(dr => !string.IsNullOrWhiteSpace(dr.path)).FirstOrDefault()?.path;
+                                    var game = new GameMetadata()
+                                    {
+                                        Source = new MetadataNameProperty("RobotCache"),
+                                        GameId = stateInfo.gameId.ToString(),
+                                        Name = stateInfo.Execution.Where(dr => !string.IsNullOrWhiteSpace(dr.title)).FirstOrDefault()?.title,
+                                        InstallDirectory = Path.Combine(libraryPath, "library", gameFolder?.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, 2, StringSplitOptions.RemoveEmptyEntries)?.First()),
+                                        IsInstalled = true,
+                                        Platforms = new HashSet<MetadataProperty> { new MetadataSpecProperty("pc_windows") },
+                                        //GameActions = new List<GameAction>(),
+                                    };
+                                    //game.GameActions.Add(new GameAction()
+                                    //{
+                                    //    IsPlayAction = true,
+                                    //    Path = $"robotcache://rungameid/{stateInfo.gameId}",
+                                    //});
 
-                                game.Name = game.Name.RemoveTrademarks();
-                                games.Add(game.GameId, game);
+                                    game.Name = game.Name.RemoveTrademarks();
+                                    games.Add(game.GameId, game);
+                                }
                             }
                         }
                     }
